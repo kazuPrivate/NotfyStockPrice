@@ -5,7 +5,6 @@ import pandas
 import datetime
 
 def main():
-
 	return
 
 def JudgeNotfyCond(defineNotfyList:list):
@@ -15,7 +14,9 @@ def JudgeNotfyCond(defineNotfyList:list):
 
 		# 判定する種別の値の開始日と終了日の価格を取得する.
 		dateStartStr = ConvertDateToString(defineNotfy.dateStart)
+		dateStartStr = SearchNearDate(dateStartStr, stockPriceDf.index.values)
 		dateEndStr = ConvertDateToString(defineNotfy.dateEnd)
+		dateEndStr = SearchNearDate(dateEndStr, stockPriceDf.index.values)
 
 		try:
 			priceStart = stockPriceDf.at[dateStartStr, defineNotfy.compTarget]
@@ -38,9 +39,23 @@ def JudgeNotfyCond(defineNotfyList:list):
 			pass
 	return
 
+def SearchNearDate(pointDateStr:str, dateStrList:list)->str:
+	retDate = pointDateStr
+	if not(pointDateStr in dateStrList):
+		compDate = ConvertStringToDate(pointDateStr)
+		for dateStr in dateStrList:
+			retDate = ConvertStringToDate(dateStr)
+			if compDate > retDate:
+				retDate = ConvertDateToString(retDate)
+				break
+	return retDate
+
 def ConvertDateToString(date:datetime.date)->str:
 	return str(date.year) + "-" + str(date.month) + "-" + str(date.day)
 
+def ConvertStringToDate(date:str)->datetime.date:
+	dateList = date.split("-", 3)
+	return datetime.date(int(dateList[0]), int(dateList[1]), int(dateList[2]))
 
 if __name__ == "__main__":
 	main()
