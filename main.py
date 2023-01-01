@@ -4,6 +4,7 @@ NotfyStockPrice メインモジュール.
 import datetime as datetime
 import schedule
 import time
+import os
 
 from ReadSettingFile import ReadSettingFile
 from ScrapeStockPrice import ScrapeStockPrice
@@ -11,11 +12,16 @@ from JudgeNotfyCond import JudgeNotfyCond
 from SendGmail import SendGmail
 
 def main():
+	isRun = True
+	CreateStatusFile()
+	print(os.path.isfile("_RUN"))
+
 	# 毎朝7時に通知処理を実行する.
 	schedule.every().day.at("07:00").do(NotfyStockPrice)
-	while True:
+	while isRun:
 		schedule.run_pending()
 		time.sleep(10)
+		isRun = os.path.isfile("_RUN")
 	return
 
 def NotfyStockPrice():
@@ -45,6 +51,11 @@ def NotfyStockPrice():
 	for defineNotfy in settingFileData.defineNotfyList:
 		if defineNotfy.isNotfyFlag:
 			SendGmail.SendGmail(defineNotfy.brandCode, defineNotfy.dateStart, defineNotfy.dateEnd, defineNotfy.compTarget, defineNotfy.rateChange)
+	return
+
+def CreateStatusFile():
+	with open("_RUN", mode="w") as a:
+		pass
 	return
 
 if __name__ == "__main__":
