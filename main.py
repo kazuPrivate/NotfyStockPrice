@@ -2,6 +2,7 @@
 NotfyStockPrice メインモジュール.
 """
 import datetime as datetime
+import schedule
 import time
 
 from ReadSettingFile import ReadSettingFile
@@ -10,8 +11,11 @@ from JudgeNotfyCond import JudgeNotfyCond
 from SendGmail import SendGmail
 
 def main():
-	NotfyStockPrice()
-
+	# 毎朝7時に通知処理を実行する.
+	schedule.every().day.at("7:00").do(NotfyStockPrice)
+	while True:
+		schedule.run_pending()
+		time.sleep(10)
 	return
 
 def NotfyStockPrice():
