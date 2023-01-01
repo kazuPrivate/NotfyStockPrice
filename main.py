@@ -12,7 +12,7 @@ from SendGmail import SendGmail
 
 def main():
 	# 毎朝7時に通知処理を実行する.
-	schedule.every().day.at("7:00").do(NotfyStockPrice)
+	schedule.every().day.at("07:00").do(NotfyStockPrice)
 	while True:
 		schedule.run_pending()
 		time.sleep(10)
