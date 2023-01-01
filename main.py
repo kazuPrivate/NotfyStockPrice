@@ -10,6 +10,11 @@ from JudgeNotfyCond import JudgeNotfyCond
 from SendGmail import SendGmail
 
 def main():
+	NotfyStockPrice()
+
+	return
+
+def NotfyStockPrice():
 	brandCodeList = []
 
 	# 設定ファイル読み込み.
